@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class Usercontroller extends Controller
@@ -11,7 +12,28 @@ class Usercontroller extends Controller
      */
     public function index()
     {
-        return view('admin.pages.user.index');
+        // $users = User::all();
+        // $users = User::orderBy('id', 'desc')->get();
+        // $users = User::orderBy('id', 'asc')->offset(10)->limit(5)->get();
+        // $users = User::orderBy('id', 'asc')->offset(10)->first();
+        // $users = User::orderBy('id', 'asc')->where('role_id', 1)->get();
+        // $users = User::orderBy('id', 'asc')->where('role_id', 1)->first();
+        // $users = User::orderBy('id', 'asc')
+        //   ->whereIN('role_id', [2,3])
+        //    ->get();
+
+        // $users = User::orderBy('id', 'asc')
+        //   ->select('id', 'name', 'email', 'role_id')
+        //    ->first();
+        // dd($users);
+
+        $users = User::join('roles as r', 'users.role_id', '=', 'r.id')
+         ->orderBy('id', 'desc')
+          ->select('users.id', 'users.name', 'users.email', 'r.name as role')
+        //    ->get();
+         ->paginate(10);
+        // dd($users);
+        return view('admin.pages.user.index', compact('users'));
     }
 
     /**
@@ -27,7 +49,7 @@ class Usercontroller extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
     }
 
     /**
@@ -35,7 +57,7 @@ class Usercontroller extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('admin.pages.user.show');
     }
 
     /**
@@ -43,7 +65,7 @@ class Usercontroller extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('admin.pages.user.edit');
     }
 
     /**

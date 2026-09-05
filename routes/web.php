@@ -18,3 +18,8 @@ Route::get('/login', function () {
 Route::get('/users', [Usercontroller::class, 'index'])->name('users.index');
 
 Route::get('/users/create', [Usercontroller::class, 'create'])->name('users.create');
+
+Route::get('/users/{id}/edit', [Usercontroller::class, 'edit'])->name('users.edit');
+
+
+Route::get('/users/{id}', [Usercontroller::class, 'show'])->name('users.show');
