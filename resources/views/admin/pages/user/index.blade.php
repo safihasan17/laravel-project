@@ -6,12 +6,20 @@
 
 @section('content')
 
-       <x-admin.phead title="users" subtitle="Mange table from this page">
+    <x-admin.phead title="users" subtitle="Mange table from this page">
 
-         <a href="{{ route('users.create') }}" class="btn-custom btn-custom-secondary" type="button"> <i class="bi bi-plus"></i> Add new</a>
+        <a href="{{ route('users.create') }}" class="btn-custom btn-custom-secondary" type="button"> <i class="bi bi-plus"></i>
+            Add new</a>
 
-     </x-admin.phead>
-   
+    </x-admin.phead>
+
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+        </div>
+    @endif
+
     <div class="table-card-custom">
         <!-- Header Controls -->
         <div class="table-header-control">
@@ -53,37 +61,46 @@
                 </thead>
                 <tbody>
                     <!-- Row 1 -->
-                   @foreach ( $users as $item )
-
-                   <tr>
-                       <td class="table-order-id">{{$item->id}}</td>
-                       <td>
-                           <div class="table-user-cell">
-                               {{-- <img src="https://i.pravatar.cc/150?img={{ $item->id }}" alt="Eleanor Pena" class="table-user-avatar"
+                    @foreach ($users as $item)
+                        <tr>
+                            <td class="table-order-id">{{ $item->id }}</td>
+                            <td>
+                                <div class="table-user-cell">
+                                    {{-- <img src="https://i.pravatar.cc/150?img={{ $item->id }}" alt="Eleanor Pena" class="table-user-avatar"
                                    onerror="this.src='assets/images/avatar.png'"> --}}
 
-                                <span class="table-user-avatar bg-brand-lime d-flex align-items-center justify-content-center text-lime fw-bold fs-5">{{ Str::substr($item->name, 0, 1) }}</span>
-                               <div>
-                                   <div class="table-user-name">{{$item->name}}</div>
-                                   <div class="table-user-sub">{{$item->email}}</div>
-                               </div>
-                           </div>
-                       </td>
-                       <td class="table-product-name">{{$item->role}}</td>
-                       
-                      
-                       <td>
-                           <div class="d-flex justify-content-center gap-1">
-                               <a href="{{ route('users.show', ['id'=>1]) }}" class="table-btn-action" title="View details"><i
-                                       class="bi bi-eye"></i></a>
-                               <a href="{{ route('users.edit', ['id'=>1]) }}" class="table-btn-action" title="Edit row"><i class="bi bi-pencil"></i></a>
-                               <a href="#" class="table-btn-action delete" title="Delete row"><i
-                                       class="bi bi-trash"></i></a>
-                           </div>
-                       </td>
-                   </tr>
-                   @endforeach
-                    
+                                    <span
+                                        class="table-user-avatar bg-brand-lime d-flex align-items-center justify-content-center text-lime fw-bold fs-5">{{ Str::substr($item->name, 0, 1) }}</span>
+                                    <div>
+                                        <div class="table-user-name">{{ $item->name }}</div>
+                                        <div class="table-user-sub">{{ $item->email }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="table-product-name">{{ $item->role }}</td>
+
+
+                            <td>
+                                <div class="d-flex justify-content-center gap-1">
+                                    <a href="{{ route('users.show', ['id' => $item->id]) }}" class="table-btn-action"
+                                        title="View details"><i class="bi bi-eye"></i></a>
+                                    <a href="{{ route('users.edit', ['id' => $item->id]) }}" class="table-btn-action"
+                                        title="Edit row"><i class="bi bi-pencil"></i></a>
+
+                                    <form action="{{ route('users.destroy', ['id' => $item->id]) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="table-btn-action delete" title="Delete row"><i
+                                                class="bi bi-trash"></i></button>
+
+
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+
                 </tbody>
             </table>
         </div>
@@ -101,6 +118,7 @@
         .table-footer-control nav {
             width: 100%;
         }
+
         .table-footer-control nav div:last-child {
             display: flex;
             align-items: center;

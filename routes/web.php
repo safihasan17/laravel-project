@@ -23,3 +23,10 @@ Route::get('/users/{id}/edit', [Usercontroller::class, 'edit'])->name('users.edi
 
 
 Route::get('/users/{id}', [Usercontroller::class, 'show'])->name('users.show');
+
+
+Route::post('/users', [Usercontroller::class, 'store'])->name('users.store');
+
+Route::put('/users/{id}', [Usercontroller::class, 'update'])->name('users.update');
+
+Route::delete('/users/{id}', [Usercontroller::class, 'destroy'])->name('users.destroy');

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class Usercontroller extends Controller
 {
@@ -40,8 +42,9 @@ class Usercontroller extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        return view('admin.pages.user.create');
+    {   $roles = Role::all();
+        $roles = Role::orderBy('name', 'asc')->get();
+        return view('admin.pages.user.create', compact('roles'));
     }
 
     /**
@@ -49,7 +52,43 @@ class Usercontroller extends Controller
      */
     public function store(Request $request)
     {
-        
+        // dd($request->all());
+        $request->validate([
+            'name'=>'required|min:3|max:100',
+            'email'=>'required|email|unique:users,email',
+            'password'=>'required|min:3|max:15',
+            'password_confirmation'=>'required|same:password',
+            'role_id'=>'required'
+        ]);
+
+        // $user = User::create([
+        //     'name'=>$request->name,
+        //     'email'=>$request->email,
+        //     'role_id'=>$request->role_id,
+        //     'password'=>Hash::make($request->password),
+        // ]);
+
+        $user       = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->role_id = $request->role_id;
+        $user->password = Hash::make($request->password);
+
+        // $user=false;
+
+        // if($user){
+        if($user->save()){
+            return redirect()
+            ->route('users.index')
+            ->with('success','user created successfully');
+
+        }else{
+            return redirect()
+            ->route('users.create')
+            ->with('error','user not created');
+        }
+
+
     }
 
     /**
@@ -57,7 +96,11 @@ class Usercontroller extends Controller
      */
     public function show(string $id)
     {
-        return view('admin.pages.user.show');
+        $user = User::join('roles as r','users.role_id', '=', 'r.id')
+        ->where('users.id', $id)
+        ->select('users.id', 'users.name', 'users.email', 'r.name as role')
+        ->first();
+        return view('admin.pages.user.show' , compact('user'));
     }
 
     /**
@@ -65,7 +108,10 @@ class Usercontroller extends Controller
      */
     public function edit(string $id)
     {
-        return view('admin.pages.user.edit');
+        $roles = Role::all();
+        $user = User::find($id);
+        // dd($user);
+        return view('admin.pages.user.edit', compact('roles','user'));
     }
 
     /**
@@ -73,7 +119,35 @@ class Usercontroller extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // dd($request->all());
+        $request->validate([
+            'name'=>'required|min:3|max:100',
+            'email'=>"required|email|unique:users,email, $id",
+            'role_id'=>'required'
+        ]);
+
+        
+        $user        = User::find($id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->role_id = $request->role_id;
+        $user->save();
+
+
+        if($user->save()){
+            return redirect()
+            ->route('users.index')
+            ->with('success','user updated successfully');
+
+        }else{
+            return redirect()
+            ->route('users.create')
+            ->with('error','user not updated');
+        }
+
+
+
+
     }
 
     /**
@@ -81,6 +155,11 @@ class Usercontroller extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // dd($id);
+        User::destroy($id);
+        
+        return redirect()
+        ->route('users.index')
+        ->with('success','user deleted successfully');
     }
 }
