@@ -82,19 +82,29 @@
 
                             <td>
                                 <div class="d-flex justify-content-center gap-1">
-                                    <a href="{{ route('users.show', ['id' => $item->id]) }}" class="table-btn-action"
+                                    <a href="{{ route('users.show', ['user' => $item->id]) }}" class="table-btn-action"
                                         title="View details"><i class="bi bi-eye"></i></a>
-                                    <a href="{{ route('users.edit', ['id' => $item->id]) }}" class="table-btn-action"
+                                    <a href="{{ route('users.edit', ['user' => $item->id]) }}" class="table-btn-action"
                                         title="Edit row"><i class="bi bi-pencil"></i></a>
 
-                                    <form action="{{ route('users.destroy', ['id' => $item->id]) }}" method="POST">
+                                    {{-- <form action="{{ route('users.destroy', ['user' => $item->id]) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="table-btn-action delete" title="Delete row"><i
+                                        <button type="submit" class="table-btn-action delete" title="Delete row"
+                                            data-bs-toggle="modal"  data-bs-target="#deleteModal{{ $item->id }}"><i
                                                 class="bi bi-trash"></i></button>
 
 
-                                    </form>
+                                    </form> --}}
+
+                                    <button type="button" class="table-btn-action delete"
+                                    data-id="{{$item->id }}"
+                                    data-name="{{$item->name }}"
+                                    title="Delete row"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modalDelete">
+                                    <i class="bi bi-trash"></i>
+                                    </button>
 
                                 </div>
                             </td>
@@ -110,6 +120,26 @@
             {{ $users->Links() }}
         </div>
     </div>
+
+    {{-- modal --}}
+
+    <x-admin.modal id="modalDelete" title="Delete User">
+        <div class="text-center">
+            <i class="bi bi-trash fs-1 text-danger"></i> <br>
+            <p> Are you sure you ant to Delete this User</p>
+            <span class="name fw-bold badge border border-danger text-danger py-2 px-3"></span>
+
+            <hr>
+
+            <form  method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="button" class="btn btn-outline-secondary" title="Delete row" data-bs-dismiss="modal">cancel</button>
+                <button type="submit" class="btn  btn-danger" title="Delete row" data-bs-dismiss="modal">Delete</button>
+            </form>
+
+        </div>
+    </x-admin.modal>
 @endsection
 
 
@@ -125,4 +155,23 @@
             justify-content: space-between;
         }
     </style>
+@endsection
+
+
+@section('script')
+
+<script>
+document.querySelectorAll('.delete').forEach(button=>{
+    button.addEventListener('click', function(){
+        let id = this.dataset.id;
+        let name = this.dataset.name;
+        // alert(id);
+
+        document.querySelector('#modalDelete .name').innerText = name;
+        document.querySelector('#modalDelete form').action = `{{ route('users.destroy' , ['user'=>':id']) }}` .replace(':id', id);
+        
+    })
+})
+</script>
+
 @endsection
