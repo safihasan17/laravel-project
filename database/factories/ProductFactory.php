@@ -19,8 +19,8 @@ class ProductFactory extends Factory
     {
         return [
             'name'=>fake()->words(2, true),
-            'category_id'=>fake()->numberBetween(1, 10),
-            'brand_id'=>fake()->numberBetween(1, 10),
+            'category_id'=>fake()->numberBetween(1, 4),
+            'brand_id'=>fake()->numberBetween(1, 5),
             'price'=>fake()->randomFloat(2, 500, 5000),
             'quantity'=>fake()->numberBetween(1, 100),
             'reorder_level'=>fake()->numberBetween(5, 10),

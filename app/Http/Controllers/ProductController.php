@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class ProductController extends Controller
 {
@@ -12,7 +15,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::with('category','brand' )->orderby('id', 'desc')->get();
+        // dd($products->first()->category);
+        return view('admin.pages.product.index', compact('products'));
     }
 
     /**
@@ -20,7 +25,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::orderby('name', 'asc')->get();
+        $brands= Brand::orderby('name', 'asc')->get();
+        return view('admin.pages.product.create', compact('categories', 'brands' ));
     }
 
     /**
@@ -28,7 +35,55 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $request->validate([
+            // 'iamge' =>'required|array',
+            // 'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
+            'name'=>'required|min:3',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:500',
+
+        ] ,[
+             'name.min'=>'please enter at least 3 characters',
+             'image.max'=>'Image size is too learge . Maximum size is 500kb',
+            //  'image.mimes'=>'please upload valid file',
+        ]);
+
+        if($request->hasFile('image')){
+            // dd($request->image->extension());
+            $imgName= time() . '.' . $request->image->extension();
+            $request->image->move(public_path('uploads'), $imgName );
+
+            Product::create([
+              'name'  => $request->name,
+              'price'  => $request->price,
+              'quantity'  => $request->qty,
+              'reorder_level'  => $request->reorder,
+              'description'  => $request->desc,
+              'category_id'  => $request->category_id,
+              'brand_id'  => $request->brand_id,
+              'active'  => $request->active ? 1: 0,
+              'image'  => "uploads/". $imgName,
+            ]);
+            return redirect()->route('products.index')->with('success', 'product created successfully');
+
+        }else{
+        //    dd('no Image');
+
+        Product::create([
+              'name'  => $request->name,
+              'price'  => $request->price,
+              'quantity'  => $request->qty,
+              'reorder_level'  => $request->reorder,
+              'description'  => $request->desc,
+              'category_id'  => $request->category_id,
+              'brand_id'  => $request->brand_id,
+              'active'  => $request->active ? 1: 0,
+            ]);
+            return redirect()->route('products.index')->with('success', 'product created successfully');
+
+
+        }
     }
 
     /**
@@ -36,7 +91,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        
     }
 
     /**
