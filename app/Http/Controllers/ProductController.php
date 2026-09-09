@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\UploadImgService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -51,19 +52,21 @@ class ProductController extends Controller
 
         if($request->hasFile('image')){
             // dd($request->image->extension());
-            $imgName= time() . '.' . $request->image->extension();
-            $request->image->move(public_path('uploads'), $imgName );
+            // $imgName= time() . '.' . $request->image->extension();
+            // $request->image->move(public_path('uploads'), $imgName );
+
+            $imgName= UploadImgService::upload($request->image, 'uploads/products');
 
             Product::create([
-              'name'  => $request->name,
-              'price'  => $request->price,
-              'quantity'  => $request->qty,
+              'name'           => $request->name,
+              'price'          => $request->price,
+              'quantity'       => $request->qty,
               'reorder_level'  => $request->reorder,
-              'description'  => $request->desc,
-              'category_id'  => $request->category_id,
-              'brand_id'  => $request->brand_id,
-              'active'  => $request->active ? 1: 0,
-              'image'  => "uploads/". $imgName,
+              'description'    => $request->desc,
+              'category_id'    => $request->category_id,
+              'brand_id'       => $request->brand_id,
+              'active'         => $request->active ? 1: 0,
+              'image'          =>  $imgName,
             ]);
             return redirect()->route('products.index')->with('success', 'product created successfully');
 
@@ -115,6 +118,12 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        // dd($product);
+        if($product->image ){
+            unlink(public_path($product->image));
+        }
+        Product::destroy($product->id);
+        return redirect()->route('products.index')->with('success', 'Product delated successfully');
+
     }
 }

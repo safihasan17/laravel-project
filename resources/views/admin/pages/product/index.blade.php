@@ -100,7 +100,7 @@
                             <td>{{$item->quantity}}</td>
                             <td>
                                 <span class="badge border {{ $item->active==1 ? 'border-success text-success': 'border-danger text-danger' }}">
-                                    {{ $item->active ==1? 'Active' : 'Inactive' }}
+                                    {{ $item->active == 1 ? 'Active' : 'Inactive' }}
                                 </span>
                             </td>
                             
@@ -184,7 +184,7 @@
 
                 document.querySelector('#modalDelete .name').innerText = name;
                 document.querySelector('#modalDelete form').action =
-                    `{{ route('users.destroy', ['user' => ':id']) }}`.replace(':id', id);
+                    `{{ route('products.destroy', ['product' => ':id']) }}`.replace(':id', id);
 
             })
         })
