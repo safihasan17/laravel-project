@@ -81,8 +81,6 @@
                                     </div>
                                 </div>
                             </td>
-                            
-                           
                             <td>
                                
                                {{ $item->category->name }}
