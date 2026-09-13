@@ -167,7 +167,7 @@ class Usercontroller extends Controller
 
         if($user->save()){
             return redirect()
-            ->route('users.index')
+            ->route('users.show', ['user'=>$user->id])
             ->with('success','user updated successfully');
 
         }else{
