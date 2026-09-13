@@ -129,7 +129,7 @@
 
         <!-- Footer Controls / Pagination -->
         <div class="table-footer-control">
-            {{-- {{ $users->Links() }} --}}
+            {{ $products->Links() }}
         </div>
     </div>
 

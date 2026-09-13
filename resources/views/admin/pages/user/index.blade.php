@@ -5,13 +5,15 @@
 
 
 @section('content')
-
+   
     <x-admin.phead title="users" subtitle="Mange table from this page">
-
+        @if(auth()->user()->role_id !=4)
         <a href="{{ route('users.create') }}" class="btn-custom btn-custom-secondary" type="button"> <i class="bi bi-plus"></i>
             Add new</a>
-
+        @endif
     </x-admin.phead>
+
+
 
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -61,6 +63,7 @@
                 </thead>
                 <tbody>
                     <!-- Row 1 -->
+                    
                     @foreach ($users as $item)
                         <tr>
                             <td class="table-order-id">{{ $item->id }}</td>
@@ -82,11 +85,15 @@
 
                             <td>
                                 <div class="d-flex justify-content-center gap-1">
+                                    
                                     <a href="{{ route('users.show', ['user' => $item->id]) }}" class="table-btn-action"
                                         title="View details"><i class="bi bi-eye"></i></a>
+
+                                     
+                                    
                                     <a href="{{ route('users.edit', ['user' => $item->id]) }}" class="table-btn-action"
                                         title="Edit row"><i class="bi bi-pencil"></i></a>
-
+                                    
                                     {{-- <form action="{{ route('users.destroy', ['user' => $item->id]) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
@@ -96,7 +103,7 @@
 
 
                                     </form> --}}
-
+                                     @if (auth()->user()->role_id == 1 && auth()->user()->role_id == 3 )
                                     <button type="button" class="table-btn-action delete"
                                     data-id="{{$item->id }}"
                                     data-name="{{$item->name }}"
@@ -106,10 +113,14 @@
                                     <i class="bi bi-trash"></i>
                                     </button>
 
+                                    @endif
+
                                 </div>
                             </td>
                         </tr>
                     @endforeach
+                    
+                   
 
                 </tbody>
             </table>

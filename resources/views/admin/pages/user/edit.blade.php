@@ -7,10 +7,10 @@
 @section('content')
 
     <x-admin.phead title="users Edit" subtitle="update this information">
-
+        @if(auth()->user()->role_id !=4)
         <a href="{{ route('users.index') }}" class="btn-custom btn-custom-secondary" type="button"> <i class="bi bi-plus"></i>
             back to users</a>
-
+        @endif
     </x-admin.phead>
 
     <form action="{{ route('users.update', ['user' => $user->id]) }}" method="POST">
