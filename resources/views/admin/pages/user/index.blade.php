@@ -103,7 +103,7 @@
 
 
                                     </form> --}}
-                                     @if (auth()->user()->role_id == 1 && auth()->user()->role_id == 3 )
+                                     @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 3 )
                                     <button type="button" class="table-btn-action delete"
                                     data-id="{{$item->id }}"
                                     data-name="{{$item->name }}"
