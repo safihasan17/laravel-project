@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
 {
@@ -12,7 +13,24 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        // $roles = DB::table('roles')->get();
+        // $roles = DB::table('roles')->paginate(2);
+        // $roles = DB::table('roles')->where('name', 'admin')->first();
+        // $roles = DB::table('roles')->offset(2)->limit(2)->get();
+        // $roles = DB::table('products')->select('name', 'price')->get();
+        // $roles = DB::table('products as p')
+        //        ->join('categories as c', 'p.category_id', '=', 'c.id')     
+        //        ->join('brands as b', 'p.brand_id', '=', 'b.id') 
+        //        ->select('p.name', 'c.name as categoty', 'b.name as brand', 'p.price')
+        //        ->get();
+
+        $roles = DB::table('roles as r')    
+               ->join('users as u', 'r.id', '=', 'u.role_id') 
+               ->select('r.name as role', 'u.name as user')
+               
+               ->get();
+        dd($roles);
+        return view('admin.pages.role.index');
     }
 
     /**

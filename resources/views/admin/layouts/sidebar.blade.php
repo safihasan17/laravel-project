@@ -49,6 +49,15 @@
                             <span>Products</span>
                         </a>
                     </li>
+
+                    <li class="sidebar-menu-item">
+                        <a href="{{ route('roles.index') }}" {{-- class="sidebar-menu-link {{ request()->routeIs('products*') ? 'active' : '' }}" --}}
+                            class="sidebar-menu-link {{ activeLink('roles*') }}" id="menu-uiforms"
+                            title="Forms and Input">
+                            <i class="bi bi-input-cursor-text"></i>
+                            <span>Roles</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         @else
