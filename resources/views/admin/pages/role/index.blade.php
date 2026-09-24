@@ -63,36 +63,23 @@
                 <tbody>
                    
                     
-                    {{-- @foreach ($users as $item)
+                    @foreach ($roles as $item)
                         <tr>
                             <td class="table-order-id">{{ $item->id }}</td>
-                            <td>
-                                <div class="table-user-cell">
-                                    
-                                    <span
-                                        class="table-user-avatar bg-brand-lime d-flex align-items-center justify-content-center text-lime fw-bold fs-5">{{ Str::substr($item->name, 0, 1) }}</span>
-                                    <div>
-                                        <div class="table-user-name">{{ $item->name }}</div>
-                                        <div class="table-user-sub">{{ $item->email }}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="table-product-name">{{ $item->role }}</td>
+                            
+                            <td class="table-product-name">{{ $item->name }}</td>
 
 
                             <td>
                                 <div class="d-flex justify-content-center gap-1">
-                                    
-                                    <a href="{{ route('users.show', ['user' => $item->id]) }}" class="table-btn-action"
-                                        title="View details"><i class="bi bi-eye"></i></a>
+                                  
 
-                                     
-                                    
-                                    <a href="{{ route('users.edit', ['user' => $item->id]) }}" class="table-btn-action"
+                    
+                                    <a href="{{ route('roles.edit', ['role' => $item->id]) }}" class="table-btn-action"
                                         title="Edit row"><i class="bi bi-pencil"></i></a>
                                     
                                    
-                                     @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 3 )
+                                     {{-- @if (auth()->role()->role_id == 1 || auth()->role()->role_id == 3 ) --}}
                                     <button type="button" class="table-btn-action delete"
                                     data-id="{{$item->id }}"
                                     data-name="{{$item->name }}"
@@ -102,12 +89,12 @@
                                     <i class="bi bi-trash"></i>
                                     </button>
 
-                                    @endif
+                                    {{-- @endif --}}
 
                                 </div>
                             </td>
                         </tr>
-                    @endforeach --}}
+                    @endforeach
                     
                    
 
@@ -168,7 +155,7 @@ document.querySelectorAll('.delete').forEach(button=>{
         // alert(id);
 
         document.querySelector('#modalDelete .name').innerText = name;
-        document.querySelector('#modalDelete form').action = `{{ route('users.destroy' , ['user'=>':id']) }}` .replace(':id', id);
+        document.querySelector('#modalDelete form').action = `{{ route('roles.destroy' , ['role'=>':id']) }}` .replace(':id', id);
         
     })
 })

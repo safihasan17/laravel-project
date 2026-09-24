@@ -24,13 +24,15 @@ class RoleController extends Controller
         //        ->select('p.name', 'c.name as categoty', 'b.name as brand', 'p.price')
         //        ->get();
 
-        $roles = DB::table('roles as r')    
-               ->join('users as u', 'r.id', '=', 'u.role_id') 
-               ->select('r.name as role', 'u.name as user')
+        // $roles = DB::table('roles as r')    
+        //        ->join('users as u', 'r.id', '=', 'u.role_id') 
+        //        ->select('r.name as role', 'u.name as user')
                
-               ->get();
-        dd($roles);
-        return view('admin.pages.role.index');
+        //        ->get();
+        // dd($roles);
+
+         $roles = DB::table('roles')->orderBy('name', 'asc')->get();
+        return view('admin.pages.role.index', compact('roles'));
     }
 
     /**
@@ -38,7 +40,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.pages.role.create');
     }
 
     /**
@@ -46,7 +48,19 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required| unique:roles,name|min:2|max:255'
+        ]);
+        $role = DB::table('roles')
+                  ->insert([
+                       'name' =>$request->name
+                   ]);
+
+        if($role){
+            return redirect()->route('roles.index')->with('success', 'Role created successfully');
+        }else{
+            return redirect()->route('roles.index')->with('error', 'Role not created');
+        }
     }
 
     /**
@@ -62,7 +76,7 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        //
+        return view('admin.pages.role.edit', compact('role'));
     }
 
     /**
@@ -70,7 +84,20 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        //
+         $request->validate([
+            'name' => 'required| unique:roles,name|min:2|max:255'
+        ]);
+        $role = DB::table('roles')
+                  ->where('id', $role->id)
+                  ->update([
+                       'name' =>$request->name
+                   ]);
+
+        if($role){
+            return redirect()->route('roles.index')->with('success', 'Role updated successfully');
+        }else{
+            return redirect()->route('roles.index')->with('error', 'Role not updated');
+        }
     }
 
     /**
@@ -78,6 +105,15 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        //
+        
+        $role = DB::table('roles')
+                  ->where('id', $role->id)
+                  ->delete();
+
+        if($role){
+            return redirect()->route('roles.index')->with('success', 'Role delated successfully');
+        }else{
+            return redirect()->route('roles.index')->with('error', 'Role not delated');
+        }
     }
 }
