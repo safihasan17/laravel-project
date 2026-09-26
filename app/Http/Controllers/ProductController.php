@@ -14,11 +14,39 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index (Request $request)
     {
-        $products = Product::with('category','brand' )->orderby('id', 'desc')->paginate(10);
+
+        // if($request->search ){
+        //     dd($request->search . " ". $request->category. " ". $request->brand);
+           
+        // }
+
+        $query = Product::query();
+        if($request->search){
+            $query->where('name', 'like', "%{$request->search}%");
+        }
+
+        if($request->category){
+            $query->where('category_id', $request->category);
+        }
+        if($request->brand){
+            $query->where('brand_id', $request->brand);
+        }
+
+        $products = $query->with('category', 'brand')
+             ->orderBy('id', 'desc')
+             ->paginate();
+
+
+
+
+        $categories = Category::orderBY('name','asc')->get();
+        $brands = Brand::orderBY('name','asc')->get();
+        // $products = Product::with('category','brand' )->orderby('id', 'desc')->paginate(10);
+        
         // dd($products->first()->category);
-        return view('admin.pages.product.index', compact('products'));
+        return view('admin.pages.product.index', compact('products', 'categories', 'brands'));
     }
 
     /**
