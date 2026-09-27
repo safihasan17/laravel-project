@@ -1,19 +1,19 @@
 @extends('admin.layouts.master')
 
-@section('title', 'users - Edit')
+@section('title', 'products - Edit')
 
 
 
 @section('content')
 
-    <x-admin.phead title="users Edit" subtitle="update this information">
+    <x-admin.phead title="products Edit" subtitle="update this information">
 
-        <a href="{{ route('users.index') }}" class="btn-custom btn-custom-secondary" type="button"> <i class="bi bi-plus"></i>
-            back to users</a>
+        <a href="{{ route('products.index') }}" class="btn-custom btn-custom-secondary" type="button"> <i class="bi bi-plus"></i>
+            back to products</a>
 
     </x-admin.phead>
 
-    <form action="{{ route('users.update', ['user' => $user->id]) }}" method="POST">
+    <form action="{{ route('products.update', ['user' => $user->id]) }}" method="POST">
         @csrf
         @method('PUT')
 
