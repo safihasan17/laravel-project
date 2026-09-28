@@ -37,7 +37,7 @@
     </a>
 
 
-     <a href="cart.html" class="btn">
+     <a href="javascript:void(0)" onclick="addToCart({{ $item->id}} , '{{ $item->name }}' , {{ $item->price }} ,'{{ $item->image ?? '' }}' )" class="btn ">
          Order now →
      </a>
 

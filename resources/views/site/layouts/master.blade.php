@@ -44,7 +44,24 @@
   @include('site.layouts.footer')
 
   <script src={{asset('assets-site/js/main.js')}} defer></script>
+  <script src={{asset('helpers/cart-helper.js')}}></script>
+  <script>
+     const cart =   new CartHelper('laracart');
+    
 
+    function  addToCart(id,name,price,img ) {
+       cart.addItem(id,name,price,img);
+        printItemNumber();
+    }
+
+    // console.log(cart.countItems());
+
+    function printItemNumber(){
+       document.querySelector('.icon-btn--cart .count').innerText = cart.countItems();
+    }
+    printItemNumber();
+    
+  </script>
   @yield('script')
 </body>
 </html>
