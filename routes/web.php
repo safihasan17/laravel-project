@@ -11,6 +11,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products-details/{id}', [HomeController::class, 'details'])->name('products.details');
 Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
 
+
 Route::get('/dashboard', function () {
     return view('admin.pages.dashboard');
 })->middleware(['auth', 'verified', 'role_id:1,2,3'])->name('dashboard');

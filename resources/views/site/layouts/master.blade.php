@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Outfit:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" />
   <link rel="stylesheet" href={{asset('assets-site/css/styles.css')}} />
+  @yield('style')
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
