@@ -10,12 +10,29 @@
                 <div class="crumbs"><a href="index.html">Home</a> <span class="sep">›</span> <span>Shopping cart</span>
                 </div>
                 <h1>Your cart</h1>
-                <p>3 items · ready to ship. Free delivery on this order. Estimated arrival 21 – 23 May.</p>
+                <p>Ready to ship. Free delivery on this order. Estimated arrival 21 – 23 May.</p>
+                @if (session('success'))
+                    <div
+                        style="margin-top: var(--s7); padding: var(--s6); background: linear-gradient(135deg, var(--indigo), var(--card-purple)); color: var(--paper); border-radius: var(--r-lg); position: relative; overflow: hidden">
+                        <div
+                            style="position: absolute; inset: 0; background-image: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.18) 0, transparent 40%); pointer-events: none">
+                        </div>
+                        <div style="position: relative">
+                            <h5 style="color: var(--paper); font-size: var(--text-xl); margin-bottom: var(--s3)">
+                                {{ session('success') }}
+                            </h5>
+                            <a href="/" class="btn btn--paper">Continue Shopping →</a>
+                        </div>
+                    </div>
+                @endif
             </div>
         </section>
 
         <section class="section">
             <div class="container">
+
+                @if (session('success'))
+                @endif
                 <div class="cart-layout">
 
                     <div>
@@ -80,24 +97,26 @@
                             <button>Apply</button>
                         </div> --}}
 
-                        <div class="cart-line"><span >Subtotal </span><span
-                                style="font-family:var(--ff-display); font-weight:600; color:var(--ink)" id="subtotal">$0.00</span>
+                        <div class="cart-line"><span>Subtotal </span><span
+                                style="font-family:var(--ff-display); font-weight:600; color:var(--ink)"
+                                id="subtotal">$0.00</span>
                         </div>
-                        <div class="cart-line"><span>Shipping</span><span
-                                style="color: var(--emerald); font-weight: 600" id="shipingCost">$0.00</span></div>
+                        <div class="cart-line"><span>Shipping</span><span style="color: var(--emerald); font-weight: 600"
+                                id="shipingCost">$0.00</span></div>
                         <div class="cart-line"><span>Estimated tax</span><span
-                                style="font-family:var(--ff-display); font-weight:600; color:var(--ink)" id="tax">$0.00</span>
+                                style="font-family:var(--ff-display); font-weight:600; color:var(--ink)"
+                                id="tax">$0.00</span>
                         </div>
                         {{-- <div class="cart-line"><span>Promo · WELCOME20</span><span
                                 style="color: var(--rose); font-family:var(--ff-display); font-weight:600">−$56.00</span>
                         </div> --}}
 
-                        <div class="cart-line is-total"><span >Total</span><span id="total">$0.00</span></div>
+                        <div class="cart-line is-total"><span>Total</span><span id="total">$0.00</span></div>
 
-                        
+
                         <a href="javascript:;" class="btn-proceed btn btn--indigo btn--block">Proceed to checkout →</a>
 
-                        <form  class="checkout-form">
+                        <form action="{{ route('orders.store') }}" method="POST" class="checkout-form">
                             @csrf
                             <div class="field-row">
                                 <div class="field">
@@ -106,7 +125,8 @@
                                 </div>
                                 <div class="field">
                                     <label for="c-last">Phone</label>
-                                    <input id="c-last" type="tel" name="phone" required="" placeholder="0151 123 456">
+                                    <input id="c-last" type="tel" name="phone" required=""
+                                        placeholder="0151 123 456">
                                 </div>
                             </div>
                             <div class="field">
@@ -119,8 +139,7 @@
                             </div>
                             <div class="field">
                                 <label for="c-msg">Shipping Address</label>
-                                <textarea name="shipping_address" id="c-msg" required=""
-                                    placeholder="12 Mothijheel, Dhaka-100"></textarea>
+                                <textarea name="shipping_address" id="c-msg" required="" placeholder="12 Mothijheel, Dhaka-100"></textarea>
                             </div>
                             <input type="hidden" name="items" value="">
                             <button href="#" type="submit" class="btn btn--indigo btn--block">Order Now →</button>
@@ -154,29 +173,34 @@
 @endsection
 
 @section('style')
-<style>
-    .checkout-form{
-        display:none;
-    }
-</style>
+    <style>
+        .checkout-form {
+            display: none;
+        }
+    </style>
 @endsection
 
 @section('script')
+@if(session('success'))
     <script>
-
+        cart.emptyCart();
+    </script>
+@endif
+    <script>
         //cart
         // console.log(cart.getCart());
-       
+
         var cartlist = document.querySelector('.cart-list');
 
-        function printCart(){
+        function printCart() {
             var list = cart.getCart();
             document.querySelector('.checkout-form input[name="items"]').value = JSON.stringify(list);
             var html = "";
             var subtotal = 0;
             list.forEach(item => {
-            //   let img =  item.img ? item.img : 'https://placehold.co/600x400'
-              let img =  item.img ? "{{ asset(':img') }}".replace(':img', item.img) : 'https://placehold.co/400x400';
+                //   let img =  item.img ? item.img : 'https://placehold.co/600x400'
+                let img = item.img ? "{{ asset(':img') }}".replace(':img', item.img) :
+                    'https://placehold.co/400x400';
                 html += `
                                 <article class="cart-row">
                                     <div class="pic"><img
@@ -198,36 +222,36 @@
     
                `;
 
-               subtotal += parseFloat(item.price*item.quantity);
+                subtotal += parseFloat(item.price * item.quantity);
 
             });
-    
+
             cartlist.innerHTML = html;
             document.querySelector('#subtotal').innerText = `$${subtotal.toFixed(2)}`;
             document.querySelector('#shipingCost').innerText = "$" + (subtotal ? 30 : 0).toFixed(2);
             document.querySelector('#tax').innerText = `$${(subtotal*.05).toFixed(2)}`;
-            document.querySelector('#total').innerText = `$${(subtotal +30 + (subtotal*.05)).toFixed(2)}`;
+            document.querySelector('#total').innerText = `$${(subtotal +(subtotal ? 30 :0) + (subtotal*.05)).toFixed(2)}`;
 
         }
 
         printCart();
 
-        function removeFromCart(id){
+        function removeFromCart(id) {
             cart.removeItem(id);
             printCart();
-             printItemNumber();
-            
-            
+            printItemNumber();
+
+
         }
 
-        function increaseQty(id){
-           cart.increaseQuantity(id);
+        function increaseQty(id) {
+            cart.increaseQuantity(id);
             printCart();
-            
+
         }
 
-        function decreaseQty(id){
-           cart.decreaseQuantity(id);
+        function decreaseQty(id) {
+            cart.decreaseQuantity(id);
             printCart();
             printItemNumber();
         }
@@ -237,9 +261,9 @@
         //order-form
         //==============
 
-        document.querySelector('.btn-proceed').addEventListener('click', function(e){
+        document.querySelector('.btn-proceed').addEventListener('click', function(e) {
             this.style.display = 'none';
-            document.querySelector('.checkout-form').style.display= 'block';
+            document.querySelector('.checkout-form').style.display = 'block';
         })
     </script>
 

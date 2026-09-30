@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class OrderController extends Controller
 {
@@ -28,7 +29,24 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        // dd($items);
+        $items = json_decode($request->items);
+        $order = Order::create([
+                    'name'              => $request->name,
+                    'phone'             => $request->phone,
+                    'shipping_address'  => $request->shipping_address,
+                    'payment_method_id' => $request->payment_method,
+                    'order_status_id'   => $request->order_status ? $request->order_status : 1,
+                ]);
+        foreach($items as $item){
+            $order->details()->create([
+                'product_id' => $item->id,
+                'quantity'   => $item->quantity,
+            ]);
+        }
+
+        return redirect()->route('cart')->with('success', 'your order has been placed. Thank you for shopting with us');
     }
 
     /**

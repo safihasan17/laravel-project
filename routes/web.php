@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products-details/{id}', [HomeController::class, 'details'])->name('products.details');
 Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
+Route::resource('orders', OrderController::class);
 
 
 Route::get('/dashboard', function () {
@@ -39,3 +41,6 @@ Route::middleware('auth','role_id:1,2,3' )->group(function () {
 
 
 require __DIR__.'/auth.php';
+require __DIR__.'/payment.php';
+
+
